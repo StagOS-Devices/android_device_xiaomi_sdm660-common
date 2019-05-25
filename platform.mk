@@ -452,5 +452,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_BOOT_JARS += \
   WfdCommon
 
+# Device-specific settings
+PRODUCT_PACKAGES += \
+    XiaomiParts
+
 PRODUCT_PACKAGES += \
 	libnl
