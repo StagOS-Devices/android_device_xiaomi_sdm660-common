@@ -476,6 +476,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_BOOT_JARS += \
 	WfdCommon
 
+# arcore
+PRODUCT_PACKAGES += \
+  arcore
+
+# Lens
+PRODUCT_PACKAGES += \
+    Lens
+
 PRODUCT_PACKAGES += \
 	libnl \
 	libwfdaac
