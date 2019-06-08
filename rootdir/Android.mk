@@ -7,7 +7,9 @@ include $(CLEAR_VARS)
 LOCAL_MODULE		:= fstab.qcom
 LOCAL_MODULE_TAGS	:= optional eng
 LOCAL_MODULE_CLASS	:= ETC
-ifeq ($(AB_OTA_UPDATER), true)
+ifeq ($(TARGET_DEVICE),wayne)
+LOCAL_SRC_FILES         := etc/fstab_wayne.qcom
+else ifeq ($(AB_OTA_UPDATER), true)
 LOCAL_SRC_FILES		:= etc/fstab_AB.qcom
 else
 LOCAL_SRC_FILES		:= etc/fstab.qcom

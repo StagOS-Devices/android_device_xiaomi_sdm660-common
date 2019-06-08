@@ -274,7 +274,9 @@ TARGET_QCOM_DISPLAY_VARIANT := caf-msm8998
 TARGET_QCOM_BLUETOOTH_VARIANT := caf-msm8998
 
 # Recovery FSTAB
-ifeq ($(AB_OTA_UPDATER), true)
+ifeq ($(TARGET_DEVICE),wayne)
+TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/rootdir/etc/fstab_wayne.qcom
+else ifeq ($(AB_OTA_UPDATER), true)
 TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/rootdir/etc/fstab_AB.qcom
 else
 TARGET_RECOVERY_FSTAB := $(PLATFORM_PATH)/rootdir/etc/recovery.fstab
