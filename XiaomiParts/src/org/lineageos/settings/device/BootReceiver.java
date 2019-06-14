@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import org.lineageos.settings.device.kcal.Utils;
+import org.lineageos.settings.device.thermalconfig.AutoThermalConfigService;
 import org.lineageos.settings.device.util.FileUtils;
 
 public class BootReceiver extends BroadcastReceiver implements Utils {
@@ -69,5 +70,7 @@ public class BootReceiver extends BroadcastReceiver implements Utils {
                 DeviceSettings.PREF_MICROPHONE_GAIN, 0));
         FileUtils.setValue(DeviceSettings.USB_FASTCHARGE_PATH, Settings.Secure.getInt(context.getContentResolver(),
                 DeviceSettings.PREF_USB_FASTCHARGE, 0));
+
+        context.startService(new Intent(context, AutoThermalConfigService.class));
     }
 }

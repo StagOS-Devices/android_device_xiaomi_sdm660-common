@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <uses-sdk android:minSdkVersion="27" />
 
@@ -87,6 +88,10 @@
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
+        </service>
+
+        <service android:name=".thermalconfig.AutoThermalConfigService"
+            android:permission="AutoThermalConfigService">
         </service>
     </application>
 </manifest>
