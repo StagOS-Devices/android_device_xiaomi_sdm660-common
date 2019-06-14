@@ -140,15 +140,23 @@ class FileUtils {
         }
     }
 
+    static void setProp(String prop, int value) {
+        SystemProperties.set(prop, String.valueOf(value));
+    }
+
+    static void setProp(String prop, String value) {
+        SystemProperties.set(prop, value);
+    }
+
     static boolean getProp(String prop, boolean defaultValue) {
         return SystemProperties.getBoolean(prop, defaultValue);
     }
 
-    static void setStringProp(String prop, String value) {
-        SystemProperties.set(prop, value);
+    static int getProp(String prop, int defaultValue) {
+        return SystemProperties.getInt(prop, defaultValue);
     }
 
-    static String getStringProp(String prop, String defaultValue) {
+    static String getProp(String prop, String defaultValue) {
         return SystemProperties.get(prop, defaultValue);
     }
 }

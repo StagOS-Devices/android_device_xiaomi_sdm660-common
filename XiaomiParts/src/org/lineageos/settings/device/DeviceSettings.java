@@ -97,7 +97,7 @@ public class DeviceSettings extends PreferenceFragment implements
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_xiaomi_parts, rootKey);
 
-        String device = FileUtils.getStringProp("ro.build.product", "unknown");
+        String device = FileUtils.getProp("ro.build.product", "unknown");
 
         mEnableHAL3 = (SecureSettingSwitchPreference) findPreference(PREF_ENABLE_HAL3);
         mEnableHAL3.setChecked(FileUtils.getProp(HAL3_SYSTEM_PROPERTY, false));
@@ -160,7 +160,7 @@ public class DeviceSettings extends PreferenceFragment implements
         });
 
         mSPECTRUM = (SecureSettingListPreference) findPreference(PREF_SPECTRUM);
-        mSPECTRUM.setValue(FileUtils.getStringProp(SPECTRUM_SYSTEM_PROPERTY, "0"));
+        mSPECTRUM.setValue(FileUtils.getProp(SPECTRUM_SYSTEM_PROPERTY, "2"));
         mSPECTRUM.setSummary(mSPECTRUM.getEntry());
         mSPECTRUM.setOnPreferenceChangeListener(this);
 
@@ -224,7 +224,7 @@ public class DeviceSettings extends PreferenceFragment implements
             case PREF_SPECTRUM:
                 mSPECTRUM.setValue((String) value);
                 mSPECTRUM.setSummary(mSPECTRUM.getEntry());
-                FileUtils.setStringProp(SPECTRUM_SYSTEM_PROPERTY, (String) value);
+                FileUtils.setProp(SPECTRUM_SYSTEM_PROPERTY, (String) value);
                 break;
 
             case PREF_HEADPHONE_GAIN:
