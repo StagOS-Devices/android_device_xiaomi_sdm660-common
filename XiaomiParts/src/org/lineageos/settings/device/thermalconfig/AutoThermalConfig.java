@@ -29,6 +29,8 @@ import org.lineageos.settings.device.util.FileUtils;
 
 import java.util.List;
 
+import static org.lineageos.settings.device.DeviceSettings.SPECTRUM_SYSTEM_PROPERTY;
+
 public class AutoThermalConfig {
     private static final String TAG = "AutoThermalConfig";
     private static final boolean DEBUG = true;
@@ -45,13 +47,22 @@ public class AutoThermalConfig {
     // Supported Thermal Modes
     private static final String MODE_BATTERY2 = "0";
     private static final String MODE_BATTERY = "1";
-    private static final String MODE_DEFAULT = "2";
+    private static final String MODE_BALANCE = "2";
     private static final String MODE_PERFORMANCE = "3";
     private static final String MODE_GAME = "4";
+
+    private static String defaultMode = "2";
 
     public AutoThermalConfig(Context context) {
         mContext = context;
         checkActivity(context);
+        defaultMode = FileUtils.getProp(SPECTRUM_SYSTEM_PROPERTY, "2");
+    }
+
+    public static void setDefaultMode(int mode) {
+        if (mode >= 0 && mode <= 4) {
+            defaultMode = String.valueOf(mode);
+        }
     }
 
     private void SetThermalMode(String packagename) {
@@ -82,7 +93,7 @@ public class AutoThermalConfig {
                 if (isGame(packagename) == 1) {
                     SendThermalMessage(MODE_GAME, packagename);
                 } else {
-                    SendThermalMessage(MODE_DEFAULT, packagename);
+                    SendThermalMessage(defaultMode, packagename);
                 }
         }
     }
@@ -124,7 +135,7 @@ public class AutoThermalConfig {
     void removeCallback() {
         handler.removeCallbacks(activityRunnable);
         if (DEBUG) Log.d(TAG, "Removed Callbacks");
-        SendThermalMessage(MODE_DEFAULT, "ScreenOff");
+        SendThermalMessage(defaultMode, "ScreenOff");
     }
 
     private class ActivityRunnable implements Runnable {

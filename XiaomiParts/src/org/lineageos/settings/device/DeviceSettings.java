@@ -28,6 +28,7 @@ import org.lineageos.settings.device.preferences.SecureSettingCustomSeekBarPrefe
 import org.lineageos.settings.device.preferences.SecureSettingListPreference;
 import org.lineageos.settings.device.preferences.SecureSettingSwitchPreference;
 import org.lineageos.settings.device.preferences.VibrationSeekBarPreference;
+import org.lineageos.settings.device.thermalconfig.AutoThermalConfig;
 import org.lineageos.settings.device.util.FileUtils;
 
 public class DeviceSettings extends PreferenceFragment implements
@@ -225,6 +226,7 @@ public class DeviceSettings extends PreferenceFragment implements
             case PREF_SPECTRUM:
                 mSPECTRUM.setValue((String) value);
                 mSPECTRUM.setSummary(mSPECTRUM.getEntry());
+                AutoThermalConfig.setDefaultMode(Integer.valueOf((String) value));
                 FileUtils.setProp(SPECTRUM_SYSTEM_PROPERTY, (String) value);
                 break;
 
