@@ -14,7 +14,7 @@
  * limitations under the License
  */
 
-package org.lineageos.settings.device;
+package org.lineageos.settings.device.util;
 
 import android.os.SystemProperties;
 
@@ -24,9 +24,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
-class FileUtils {
+public final class FileUtils {
 
-    static boolean fileWritable(String filename) {
+    public static boolean fileWritable(String filename) {
         return fileExists(filename) && new File(filename).canWrite();
     }
 
@@ -37,10 +37,10 @@ class FileUtils {
         return new File(filename).exists();
     }
 
-    static void setValue(String path, int value) {
+    public static boolean setValue(String path, int value) {
         if (fileWritable(path)) {
             if (path == null) {
-                return;
+                return false;
             }
             try {
                 FileOutputStream fos = new FileOutputStream(new File(path));
@@ -49,14 +49,16 @@ class FileUtils {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 
-    static void setValue(String path, boolean value) {
+    public static boolean setValue(String path, boolean value) {
         if (fileWritable(path)) {
             if (path == null) {
-                return;
+                return false;
             }
             try {
                 FileOutputStream fos = new FileOutputStream(new File(path));
@@ -65,14 +67,16 @@ class FileUtils {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 
-    static void setValue(String path, double value) {
+    public static boolean setValue(String path, double value) {
         if (fileWritable(path)) {
             if (path == null) {
-                return;
+                return false;
             }
             try {
                 FileOutputStream fos = new FileOutputStream(new File(path));
@@ -81,14 +85,16 @@ class FileUtils {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 
-    static void setValue(String path, String value) {
+    public static boolean setValue(String path, String value) {
         if (fileWritable(path)) {
             if (path == null) {
-                return;
+                return false;
             }
             try {
                 FileOutputStream fos = new FileOutputStream(new File(path));
@@ -97,11 +103,13 @@ class FileUtils {
                 fos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 
-    static String readLine(String filename) {
+    public static String readLine(String filename) {
         if (filename == null) {
             return null;
         }
@@ -124,7 +132,7 @@ class FileUtils {
         return line;
     }
 
-    static boolean getFileValueAsBoolean(String filename, boolean defValue) {
+    public static boolean getValue(String filename, boolean defValue) {
         String fileValue = readLine(filename);
         if (fileValue != null) {
             return !fileValue.equals("0");
@@ -132,7 +140,7 @@ class FileUtils {
         return defValue;
     }
 
-    static void setProp(String prop, boolean value) {
+    public static void setProp(String prop, boolean value) {
         if (value) {
             SystemProperties.set(prop, "1");
         } else {
@@ -140,23 +148,23 @@ class FileUtils {
         }
     }
 
-    static void setProp(String prop, int value) {
+    public static void setProp(String prop, int value) {
         SystemProperties.set(prop, String.valueOf(value));
     }
 
-    static void setProp(String prop, String value) {
+    public static void setProp(String prop, String value) {
         SystemProperties.set(prop, value);
     }
 
-    static boolean getProp(String prop, boolean defaultValue) {
+    public static boolean getProp(String prop, boolean defaultValue) {
         return SystemProperties.getBoolean(prop, defaultValue);
     }
 
-    static int getProp(String prop, int defaultValue) {
+    public static int getProp(String prop, int defaultValue) {
         return SystemProperties.getInt(prop, defaultValue);
     }
 
-    static String getProp(String prop, String defaultValue) {
+    public static String getProp(String prop, String defaultValue) {
         return SystemProperties.get(prop, defaultValue);
     }
 }

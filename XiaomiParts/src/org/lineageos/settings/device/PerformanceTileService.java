@@ -3,6 +3,8 @@ package org.lineageos.settings.device;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
+import org.lineageos.settings.device.util.FileUtils;
+
 public class PerformanceTileService extends TileService {
 
     @Override

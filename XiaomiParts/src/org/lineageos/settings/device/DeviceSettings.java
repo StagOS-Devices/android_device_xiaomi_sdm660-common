@@ -28,6 +28,7 @@ import org.lineageos.settings.device.preferences.SecureSettingCustomSeekBarPrefe
 import org.lineageos.settings.device.preferences.SecureSettingListPreference;
 import org.lineageos.settings.device.preferences.SecureSettingSwitchPreference;
 import org.lineageos.settings.device.preferences.VibrationSeekBarPreference;
+import org.lineageos.settings.device.util.FileUtils;
 
 public class DeviceSettings extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener {
@@ -172,7 +173,7 @@ public class DeviceSettings extends PreferenceFragment implements
 
         if (FileUtils.fileWritable(USB_FASTCHARGE_PATH)) {
             mFastcharge = (SecureSettingSwitchPreference) findPreference(PREF_USB_FASTCHARGE);
-            mFastcharge.setChecked(FileUtils.getFileValueAsBoolean(USB_FASTCHARGE_PATH, false));
+            mFastcharge.setChecked(FileUtils.getValue(USB_FASTCHARGE_PATH, false));
             mFastcharge.setOnPreferenceChangeListener(this);
         } else {
             getPreferenceScreen().removePreference(findPreference(CATEGORY_FASTCHARGE));

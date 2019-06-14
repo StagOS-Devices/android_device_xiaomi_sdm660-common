@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import org.lineageos.settings.device.kcal.Utils;
+import org.lineageos.settings.device.util.FileUtils;
 
 public class BootReceiver extends BroadcastReceiver implements Utils {
 
