@@ -46,3 +46,4 @@ allow system_app exported_overlay_prop:file read;
 allow system_app exported_wifi_prop:file read;
 allow system_app firstboot_prop:file read;
 allow system_app fst_prop:file read;
+allow system_app sysfs_thermal:file { setattr w_file_perms };
