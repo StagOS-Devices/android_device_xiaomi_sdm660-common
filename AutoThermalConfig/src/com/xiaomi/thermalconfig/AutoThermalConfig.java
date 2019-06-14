@@ -46,14 +46,11 @@ public class AutoThermalConfig {
     private static final String THERMAL_MESSAGE_PATH = "/sys/class/thermal/thermal_message/sconfig";
 
     // Supported Thermal Modes
-        private static final String MODE_DEFAULT = "0";
-    private static final String MODE_DIALER = "8";
-    private static final String MODE_GAME = "9";
-    private static final String MODE_PERFORMANCE = "10";
-    private static final String MODE_BROWSER = "11";
-    private static final String MODE_CAMERA = "12";
-    private static final String MODE_PUBG = "13";
-    private static final String MODE_VIDEO = "14";
+    private static final String MODE_DEAFULT = "0";
+    private static final String MODE_PERFORMANCE = "1";
+    private static final String MODE_BATTERY = "2";
+    private static final String MODE_GAME = "3";
+    private static final String MODE_BATTERY2 = "4";
 
     public AutoThermalConfig(Context context) {
         mContext = context;
@@ -62,40 +59,28 @@ public class AutoThermalConfig {
 
     private void SetThermalMode(String packagename) {
         switch (packagename) {
-            case "com.android.dialer":
-            case "com.google.android.dialer":
-                SendThermalMessage(MODE_DIALER, packagename);
-                break;
             case "com.antutu.ABenchMark":
             case "com.antutu.benchmark.full":
             case "com.futuremark.dmandroid.application":
             case "com.primatelabs.geekbench":
                 SendThermalMessage(MODE_PERFORMANCE, packagename);
                 break;
-            case "org.codeaurora.snapcam":
-            case "com.android.camera":
-            case "com.google.android.GoogleCamera":
-            case "com.google.android.GoogleCameraEng":
-            case "com.android.gallery3d":
-            case "org.codeaurora.gallery":
-            case "com.google.android.apps.photos":
-                SendThermalMessage(MODE_CAMERA, packagename);
-                break;
-            case "org.lineageos.jelly":
-            case "com.android.chrome":
-            case "com.UCMobile.intl":
-                SendThermalMessage(MODE_BROWSER, packagename);
-                break;
-            case "com.tencent.ig":
-                SendThermalMessage(MODE_PUBG, packagename);
-                break;
             case "com.google.android.youtube":
             case "com.netflix.mediaclient":
             case "com.google.android.videos":
             case "com.amazon.avod.thirdpartyclient":
             case "com.google.android.apps.youtube.kids":
-                SendThermalMessage(MODE_VIDEO, packagename);
+            case "org.lineageos.jelly":
+            case "com.android.chrome":
+            case "com.UCMobile.intl":
+            case "ch.deletescape.lawnchair.ci":
+                SendThermalMessage(MODE_BATTERY, packagename);
                 break;
+            case "com.tencent.ig":
+            case "skynet.cputhrottlingtest"
+                SendThermalMessage(MODE_GAME, packagename);
+                break;
+
             default:
                 if (isGame(packagename) == 1) {
                     SendThermalMessage(MODE_GAME, packagename);
