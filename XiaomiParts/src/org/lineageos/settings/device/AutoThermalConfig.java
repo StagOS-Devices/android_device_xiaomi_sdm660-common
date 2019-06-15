@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.thermalconfig;
+package org.lineageos.settings.device;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 
 import org.lineageos.settings.device.util.FileUtils;
@@ -31,18 +32,15 @@ import java.util.List;
 
 import static org.lineageos.settings.device.DeviceSettings.SPECTRUM_SYSTEM_PROPERTY;
 
-public class AutoThermalConfig {
+class AutoThermalConfig {
     private static final String TAG = "AutoThermalConfig";
     private static final boolean DEBUG = true;
 
     private static final Handler handler = new Handler();
     private ActivityRunnable activityRunnable;
-
-    private String foregroundApp;
+    private boolean mRunning = false;
 
     private Context mContext;
-
-    private static final String THERMAL_MESSAGE_PATH = "/sys/class/thermal/thermal_message/sconfig";
 
     // Supported Thermal Modes
     private static final String MODE_BATTERY2 = "0";
@@ -51,28 +49,33 @@ public class AutoThermalConfig {
     private static final String MODE_PERFORMANCE = "3";
     private static final String MODE_GAME = "4";
 
-    private static String defaultMode = "2";
+    private static String mDefaultMode = MODE_BALANCE;
+    private static boolean mEnabled = false;
 
-    public AutoThermalConfig(Context context) {
+    AutoThermalConfig(Context context) {
         mContext = context;
-        checkActivity(context);
-        defaultMode = FileUtils.getProp(SPECTRUM_SYSTEM_PROPERTY, "2");
-    }
-
-    public static void setDefaultMode(int mode) {
-        if (mode >= 0 && mode <= 4) {
-            defaultMode = String.valueOf(mode);
+        mEnabled = Settings.Secure.getInt(context.getContentResolver(),
+                DeviceSettings.PREF_AUTO_THERMAL, 0) == 1;
+        mDefaultMode = Settings.Secure.getString(context.getContentResolver(),
+                DeviceSettings.PREF_SPECTRUM);
+        if (mEnabled) {
+            checkActivity(context);
+        } else {
+            sendThermalMessage(mDefaultMode);
         }
     }
 
-    private void SetThermalMode(String packagename) {
+    private void setThermalMode(String packagename) {
         switch (packagename) {
+            // Benchmarks
             case "com.antutu.ABenchMark":
             case "com.antutu.benchmark.full":
             case "com.futuremark.dmandroid.application":
             case "com.primatelabs.geekbench":
-                SendThermalMessage(MODE_PERFORMANCE, packagename);
+                sendThermalMessage(MODE_PERFORMANCE);
                 break;
+
+            // Video
             case "com.google.android.youtube":
             case "com.netflix.mediaclient":
             case "com.google.android.videos":
@@ -82,18 +85,19 @@ public class AutoThermalConfig {
             case "com.android.chrome":
             case "com.UCMobile.intl":
             case "ch.deletescape.lawnchair.ci":
-                SendThermalMessage(MODE_BATTERY, packagename);
+                sendThermalMessage(MODE_BATTERY);
                 break;
+
             case "com.tencent.ig":
             case "skynet.cputhrottlingtest":
-                SendThermalMessage(MODE_GAME, packagename);
+                sendThermalMessage(MODE_GAME);
                 break;
 
             default:
                 if (isGame(packagename) == 1) {
-                    SendThermalMessage(MODE_GAME, packagename);
+                    sendThermalMessage(MODE_GAME);
                 } else {
-                    SendThermalMessage(defaultMode, packagename);
+                    sendThermalMessage(mDefaultMode);
                 }
         }
     }
@@ -113,32 +117,26 @@ public class AutoThermalConfig {
         return isGame;
     }
 
-    private void SendThermalMessage(String mMode, String packagename) {
-        if (!(GetThermalMessage().equals(mMode))) {
-            Log.d(TAG, "Set thermal config for foreground Change: " + packagename);
-            if (FileUtils.setValue(THERMAL_MESSAGE_PATH, mMode))
-                Log.d(TAG, "Change Thermal Mode to " + mMode + " successful");
-            else
-                Log.d(TAG, "Change Thermal Mode to " + mMode + " fail!");
-        }
-    }
-
-    private String GetThermalMessage() {
-        return FileUtils.readLine(THERMAL_MESSAGE_PATH);
+    private static void sendThermalMessage(String mode) {
+        if (DEBUG) Log.d(TAG, "Change mode to: " + mode);
+        FileUtils.setProp(SPECTRUM_SYSTEM_PROPERTY, mode);
     }
 
     void checkActivity(Context context) {
         activityRunnable = new ActivityRunnable(context);
         handler.postDelayed(activityRunnable, 500);
+        mRunning = true;
     }
 
     void removeCallback() {
-        handler.removeCallbacks(activityRunnable);
         if (DEBUG) Log.d(TAG, "Removed Callbacks");
-        SendThermalMessage(defaultMode, "ScreenOff");
+        handler.removeCallbacks(activityRunnable);
+        mRunning = false;
+        sendThermalMessage(mDefaultMode);
     }
 
     private class ActivityRunnable implements Runnable {
+
         private Context context;
 
         private ActivityRunnable(Context context) {
@@ -151,10 +149,28 @@ public class AutoThermalConfig {
             List<ActivityManager.RunningTaskInfo> runningTasks = manager.getRunningTasks(1);
             if (runningTasks != null && runningTasks.size() > 0) {
                 ComponentName topActivity = runningTasks.get(0).topActivity;
-                foregroundApp = topActivity.getPackageName();
+                String foregroundApp = topActivity.getPackageName();
                 handler.postDelayed(this, 500);
-                SetThermalMode(foregroundApp);
+                setThermalMode(foregroundApp);
             }
+        }
+
+    }
+
+    void update() {
+        mEnabled = Settings.Secure.getInt(mContext.getContentResolver(),
+                DeviceSettings.PREF_AUTO_THERMAL, 0) == 1;
+        mDefaultMode = Settings.Secure.getString(mContext.getContentResolver(),
+                DeviceSettings.PREF_SPECTRUM);
+        if (mEnabled) {
+            if (!mRunning) {
+                checkActivity(mContext);
+            }
+        } else {
+            if (mRunning) {
+                removeCallback();
+            }
+            sendThermalMessage(mDefaultMode);
         }
     }
 }

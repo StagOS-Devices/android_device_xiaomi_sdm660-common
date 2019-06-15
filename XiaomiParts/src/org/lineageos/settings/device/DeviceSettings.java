@@ -16,9 +16,13 @@
 
 package org.lineageos.settings.device;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v14.preference.PreferenceFragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
@@ -28,7 +32,6 @@ import org.lineageos.settings.device.preferences.SecureSettingCustomSeekBarPrefe
 import org.lineageos.settings.device.preferences.SecureSettingListPreference;
 import org.lineageos.settings.device.preferences.SecureSettingSwitchPreference;
 import org.lineageos.settings.device.preferences.VibrationSeekBarPreference;
-import org.lineageos.settings.device.thermalconfig.AutoThermalConfig;
 import org.lineageos.settings.device.util.FileUtils;
 
 public class DeviceSettings extends PreferenceFragment implements
@@ -65,6 +68,8 @@ public class DeviceSettings extends PreferenceFragment implements
     public static final String PREF_DEVICE_DOZE = "device_doze";
     public static final String PREF_DEVICE_KCAL = "device_kcal";
 
+    public static final String PREF_AUTO_THERMAL = "auto_thermal";
+
     public static final String PREF_SPECTRUM = "spectrum";
     public static final String SPECTRUM_SYSTEM_PROPERTY = "persist.spectrum.profile";
 
@@ -79,6 +84,9 @@ public class DeviceSettings extends PreferenceFragment implements
 
     public static final String DEVICE_DOZE_PACKAGE_NAME = "org.lineageos.settings.doze";
 
+    private boolean mBound = false;
+    private AutoThermalConfigService mAutoThermalConfigService;
+
     private SecureSettingSwitchPreference mEnableHAL3;
     private SecureSettingSwitchPreference mEnableEIS;
     private SecureSettingSwitchPreference mEnableFpAction;
@@ -90,10 +98,27 @@ public class DeviceSettings extends PreferenceFragment implements
     private SecureSettingCustomSeekBarPreference mTorchBrightness;
     private VibrationSeekBarPreference mVibrationStrength;
     private Preference mKcal;
+    private SecureSettingSwitchPreference mAutoThermal;
     private SecureSettingListPreference mSPECTRUM;
     private SecureSettingCustomSeekBarPreference mHeadphoneGain;
     private SecureSettingCustomSeekBarPreference mMicrophoneGain;
     private SecureSettingSwitchPreference mFastcharge;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            AutoThermalConfigService.SBinder binder = (AutoThermalConfigService.SBinder) service;
+            mAutoThermalConfigService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -161,8 +186,10 @@ public class DeviceSettings extends PreferenceFragment implements
             return true;
         });
 
+        mAutoThermal = (SecureSettingSwitchPreference) findPreference(PREF_AUTO_THERMAL);
+        mAutoThermal.setOnPreferenceChangeListener(this);
+
         mSPECTRUM = (SecureSettingListPreference) findPreference(PREF_SPECTRUM);
-        mSPECTRUM.setValue(FileUtils.getProp(SPECTRUM_SYSTEM_PROPERTY, "2"));
         mSPECTRUM.setSummary(mSPECTRUM.getEntry());
         mSPECTRUM.setOnPreferenceChangeListener(this);
 
@@ -223,12 +250,20 @@ public class DeviceSettings extends PreferenceFragment implements
                 FileUtils.setValue(VIBRATION_STRENGTH_PATH, vibrationValue);
                 break;
 
+            case PREF_AUTO_THERMAL:
+                mAutoThermal.setChecked((boolean) value);
+                if (mBound) {
+                    mAutoThermalConfigService.update();
+                }
+                return false;
+
             case PREF_SPECTRUM:
                 mSPECTRUM.setValue((String) value);
                 mSPECTRUM.setSummary(mSPECTRUM.getEntry());
-                AutoThermalConfig.setDefaultMode(Integer.valueOf((String) value));
-                FileUtils.setProp(SPECTRUM_SYSTEM_PROPERTY, (String) value);
-                break;
+                if (mBound) {
+                    mAutoThermalConfigService.update();
+                }
+                return false;
 
             case PREF_HEADPHONE_GAIN:
                 FileUtils.setValue(HEADPHONE_GAIN_PATH, value + " " + value);
@@ -256,5 +291,19 @@ public class DeviceSettings extends PreferenceFragment implements
         } catch (PackageManager.NameNotFoundException e) {
             return true;
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Intent intent = new Intent(getContext(), AutoThermalConfigService.class);
+        getContext().bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        getContext().unbindService(mConnection);
+        mBound = false;
     }
 }

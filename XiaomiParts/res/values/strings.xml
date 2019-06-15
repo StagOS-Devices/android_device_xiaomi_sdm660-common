@@ -123,4 +123,6 @@
     <string name="edit_value">Choose new Value</string>
     <string name="default_value">Default Value</string>
     <string name="edit_hint">Value between %1$d and %2$d</string>
+    <string name="auto_thermal_title">Enable auto thermal configuration</string>
+    <string name="auto_thermal_summary">Choose thermal config per app</string>
 </resources>

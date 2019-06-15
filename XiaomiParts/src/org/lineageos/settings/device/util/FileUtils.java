@@ -109,26 +109,17 @@ public final class FileUtils {
         return true;
     }
 
-    public static String readLine(String filename) {
+    private static String readLine(String filename) {
         if (filename == null) {
             return null;
         }
-        BufferedReader br = null;
         String line;
-        try {
-            br = new BufferedReader(new FileReader(filename), 1024);
+        try (BufferedReader br = new BufferedReader(new FileReader(filename), 1024)) {
             line = br.readLine();
         } catch (IOException e) {
             return null;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
         }
+        // ignore
         return line;
     }
 

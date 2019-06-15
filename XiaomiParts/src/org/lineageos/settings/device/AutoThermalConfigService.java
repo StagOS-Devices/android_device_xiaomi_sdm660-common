@@ -15,31 +15,44 @@
  * limitations under the License.
  */
 
-package org.lineageos.settings.device.thermalconfig;
+package org.lineageos.settings.device;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Binder;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
+
+import static org.lineageos.settings.device.DeviceSettings.PREF_AUTO_THERMAL;
 
 public class AutoThermalConfigService extends Service {
     static final String TAG = "AutoThermalConfig";
     private static final boolean DEBUG = true;
 
+    private SBinder mBinder = new SBinder();
     private Context mContext;
-
-    private boolean flag;
-
+    private boolean mEnabled = false;
+    private boolean mFlag;
     private AutoThermalConfig mAutoThermalConfig;
+
+    class SBinder extends Binder {
+        AutoThermalConfigService getService() {
+            return AutoThermalConfigService.this;
+        }
+    }
 
     @Override
     public void onCreate() {
         if (DEBUG) Log.d(TAG, "Creating service");
         super.onCreate();
         mContext = this;
+        mEnabled = Settings.Secure.getInt(mContext.getContentResolver(),
+                PREF_AUTO_THERMAL, 0) == 1;
+        mAutoThermalConfig = new AutoThermalConfig(mContext);
     }
 
     @Override
@@ -49,8 +62,7 @@ public class AutoThermalConfigService extends Service {
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
         mContext.registerReceiver(mScreenStateReceiver, screenStateFilter);
-        flag = false;
-        mAutoThermalConfig = new AutoThermalConfig(mContext);
+        mFlag = false;
         return START_STICKY;
     }
 
@@ -64,28 +76,40 @@ public class AutoThermalConfigService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return mBinder;
     }
+
 
     private void ScreenOn() {
         if (DEBUG) Log.d(TAG, "Screen on");
-        mAutoThermalConfig.checkActivity(mContext);
+        if (mEnabled) {
+            mAutoThermalConfig.checkActivity(mContext);
+        }
     }
 
     private void ScreenOff() {
         if (DEBUG) Log.d(TAG, "Screen off");
-        flag = true;
-        mAutoThermalConfig.removeCallback();
+        mFlag = true;
+        if (mEnabled) {
+            mAutoThermalConfig.removeCallback();
+        }
     }
 
     private BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                if (flag) ScreenOn();
+                if (mFlag) ScreenOn();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 ScreenOff();
             }
         }
     };
+
+    public void update() {
+        mEnabled = Settings.Secure.getInt(mContext.getContentResolver(),
+                PREF_AUTO_THERMAL, 0) == 1;
+
+        mAutoThermalConfig.update();
+    }
 }

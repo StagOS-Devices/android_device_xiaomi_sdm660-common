@@ -90,7 +90,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".thermalconfig.AutoThermalConfigService"
+        <service android:name=".AutoThermalConfigService"
             android:permission="AutoThermalConfigService">
         </service>
     </application>
