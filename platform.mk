@@ -305,7 +305,10 @@ PRODUCT_COPY_FILES += \
 
 # Power
 PRODUCT_PACKAGES += \
-	android.hardware.power@1.1-service-qti
+	android.hardware.power@1.3-service.sdm660-libperfmgr
+
+PRODUCT_COPY_FILES += \
+	$(PLATFORM_PATH)/power-libperfmgr/powerhint.json:$(TARGET_COPY_OUT_VENDOR)/etc/powerhint.json
 
 # Public Libraries
 PRODUCT_COPY_FILES += \
@@ -330,7 +333,8 @@ PRODUCT_PACKAGES += \
 	init.qcom.usb.sh \
 	init.qcom.power.sh \
 	init.qti.fm.sh \
-	init.qti.qseecomd.sh
+	init.qti.qseecomd.sh \
+	move_goodix_data.sh
 
 PRODUCT_PACKAGES += \
 	init.msm.usb.configfs.rc \
