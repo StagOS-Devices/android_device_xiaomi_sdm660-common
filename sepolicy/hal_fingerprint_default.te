@@ -39,5 +39,7 @@ allow hal_fingerprint_default fingerprintd_data_file:file { getattr rename unlin
 allow hal_fingerprint_default mnt_user_file:dir r_dir_perms;
 allow hal_fingerprint_default mnt_user_file:file r_file_perms;
 allow hal_fingerprint_default mnt_user_file:lnk_file r_file_perms;
+allow hal_fingerprint_default sysfs_fingerprint:dir r_dir_perms;
+allow hal_fingerprint_default sysfs_fingerprint:file rw_file_perms;
 
 set_prop(hal_fingerprint_default, fingerprint_prop)
