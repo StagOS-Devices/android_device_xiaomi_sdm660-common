@@ -32,10 +32,12 @@
 static inline const char* BtmGetDefaultName()
 {
     char product_model[PROPERTY_VALUE_MAX];
+    char *model = NULL;
     property_get("ro.product.model", product_model, "");
 
     // Just return ro.product.model, no need to check for a specific device here...
-    return product_model;
+    strcat(model, product_model);
+    return model;
 }
 #undef PROPERTY_VALUE_MAX
 
