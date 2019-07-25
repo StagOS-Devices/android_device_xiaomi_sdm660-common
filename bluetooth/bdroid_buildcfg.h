@@ -34,17 +34,8 @@ static inline const char* BtmGetDefaultName()
     char product_model[PROPERTY_VALUE_MAX];
     property_get("ro.product.model", product_model, "");
 
-    if (strstr(product_model, "Mi A2"))
-        return "Mi A2";
-    if (strstr(product_model, "MI 6X"))
-        return "MI 6X";
-    if (strstr(product_model, "MI PAD 4"))
-        return "MI PAD 4";
-    if (strstr(product_model, "MI PAD 4 PLUS"))
-        return "MI PAD 4 PLUS";
-
-    // Fallback to ro.product.model
-    return "";
+    // Just return ro.product.model, no need to check for a specific device here...
+    return product_model;
 }
 #undef PROPERTY_VALUE_MAX
 
