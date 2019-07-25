@@ -78,7 +78,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	vendor.camera.hal1.packagelist= com.whatsapp,com.android.camera,com.android.camera2,com.instagram.android \
 	persist.vendor.camera.fdvideo=1 \
 	persist.vendor.camera.awb.sync=2 \
-	persist.vendor.camera.ltm.overlap=13
+	persist.vendor.camera.ltm.overlap=13 \
+	persist.vendor.camera.eis.enable=1 \
+	persist.vendor.camera.HAL3.enabled=1
+	
 
 # Charger
 PRODUCT_PROPERTY_OVERRIDES += \
