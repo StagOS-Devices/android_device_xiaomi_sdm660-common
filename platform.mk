@@ -37,12 +37,6 @@ $(call inherit-product, vendor/xiaomi/sdm660-common/sdm660-common-vendor.mk)
 # Overlays
 DEVICE_PACKAGE_OVERLAYS := device/xiaomi/sdm660-common/overlay
 
-# Build Fingerprint
-PRODUCT_BUILD_PROP_OVERRIDES += \
-	PRIVATE_BUILD_DESC="taimen-user 9 PQ3A.190705.001 5565753 release-keys"
-
-BUILD_FINGERPRINT := google/taimen/taimen:9/PQ3A.190705.001/5565753:user/release-keys
-
 # Platform properties
 $(call inherit-product, $(PLATFORM_PATH)/platform_prop.mk)
 
