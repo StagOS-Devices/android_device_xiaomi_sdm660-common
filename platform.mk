@@ -137,7 +137,7 @@ PRODUCT_PACKAGES += \
 
 # Doze
 PRODUCT_PACKAGES += \
-	XiaomiDoze
+	XiaomiParts
 
 # DRM
 PRODUCT_PACKAGES += \
