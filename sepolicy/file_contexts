@@ -9,14 +9,15 @@
 # Biometric
 /(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint@2\.1-service\.xiaomi_sdm660 u:object_r:hal_fingerprint_sdm660_exec:s0
 
-# Fpc Fingerprint
-/sys/devices/soc/soc:fpc1020(/.*)?		u:object_r:fingerprint_sysfs:s0
-
 # For Goodix fingerprint
 /dev/goodix_fp*                                 u:object_r:fingerprint_device:s0
 
 # Goodix Fingerprint data
 /persist/data/gf*                               u:object_r:fingerprint_data_file:s0
+
+# Input files
+/vendor/usr/idc(/.*)?                               u:object_r:idc_file:s0
+/vendor/usr/keylayout(/.*)?                         u:object_r:keylayout_file:s0
 
 # USB HAL
 /(vendor|system/vendor)/bin/hw/android\.hardware\.usb@1\.1-service\.xiaomi_sdm660       u:object_r:hal_usb_default_exec:s0
@@ -31,15 +32,14 @@
 /proc/touchscreen/enable_dt2w u:object_r:sysfs_tap_to_wake:s0
 
 # Fingerprint
-/data/vendor/fpc(/.*)?                                        u:object_r:fingerprint_data_file:s0
-/data/vendor/goodix(/.*)?                                     u:object_r:fingerprint_data_file:s0
+/data/vendor/fpc(/.*)?                              u:object_r:fingerprint_vendor_data_file:s0
+/data/vendor/gf_data(/.*)?                          u:object_r:fingerprint_vendor_data_file:s0
+/data/vendor/goodix(/.*)?                           u:object_r:fingerprint_vendor_data_file:s0
 /data/misc/gf_data(/.*)?                                      u:object_r:fingerprint_data_file:s0
 /data/gf_data(/.*)?                                           u:object_r:fingerprint_data_file:s0
 /data/misc/goodix(/.*)?                                       u:object_r:fingerprint_data_file:s0
-/persist/fpc(/.*)?                                            u:object_r:fingerprint_persist_file:s0
-/sys/devices/soc/soc:fpc1020.*/irq                            u:object_r:sysfs_fpc_dev:s0
-/sys/devices/soc/soc:fpc1020.*/hw_reset                       u:object_r:sysfs_fpc_dev:s0
-/sys/devices/soc/soc:fpc1020.*/wakeup_enable                  u:object_r:sysfs_fpc_dev:s0
+/(mnt/vendor)/persist/fpc(/.*)?                     u:object_r:fingerprint_persist_file:s0
+/sys/devices/soc/soc:fpc1020(/.*)?                  u:object_r:fingerprint_sysfs:s0
 
 # Mlipay
 /(vendor|system/vendor)/bin/mlipayd                 u:object_r:hal_mlipay_default_exec:s0
@@ -56,8 +56,3 @@
 /sys/devices/soc/ca00000\.qcom,msm-cam/video4linux/video0(/.*)? u:object_r:sysfs_graphics:s0
 /sys/devices/soc/caa0000\.qcom,jpeg/video4linux/video1(/.*)?   u:object_r:sysfs_graphics:s0
 /sys/devices/soc/c900000\.qcom,mdss_rotator/video4linux/video2(/.*)?     u:object_r:sysfs_graphics:s0
-
-# Keylayout
-/vendor/usr/keylayout/uinput-fpc\.kl                      u:object_r:vendor_keylayout_file:s0
-/vendor/usr/keylayout/uinput-goodix\.kl                   u:object_r:vendor_keylayout_file:s0
-/vendor/usr/keylayout/sdm660-snd-card_Button_Jack\.kl     u:object_r:vendor_keylayout_file:s0

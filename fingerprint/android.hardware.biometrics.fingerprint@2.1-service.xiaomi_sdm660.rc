@@ -2,27 +2,11 @@ on init
     chown system system /dev/goodix_fp
     chmod 0644 /dev/goodix_fp
 
-on boot
-    chown system system /sys/bus/platform/devices/soc:fpc1020/irq
-    chown system system /sys/bus/platform/devices/soc:fpc1020/wakeup_enable
-    chown system system /sys/bus/platform/devices/soc:fpc1020/hw_reset
-    chown system system /sys/bus/platform/devices/soc:fpc1020/device_prepare
-    chown system system /data/misc/fpc/calibration_image.pndat
-    chmod 0700 /sys/bus/platform/devices/soc:fpc1020/irq
-    chmod 0700 /sys/bus/platform/devices/soc:fpc1020/wakeup_enable
-    chmod 0700 /sys/bus/platform/devices/soc:fpc1020/hw_reset
-    chmod 0700 /sys/bus/platform/devices/soc:fpc1020/device_prepare
-    chmod 0600 /data/misc/fpc/calibration_image.pndat
-
 on post-fs-data
     mkdir /data/misc/fpc 0770 system system
     mkdir /data/misc/goodix 0770 system system
-    mkdir /persist/fpc 0770 system system
     mkdir /data/vendor/goodix 0770 system system
     mkdir /data/vendor/fpc 0770 system system
-    copy /data/vendor/fpc/user.db /data/vendor_de/0/fpdata/user.db
-    chown system system /data/vendor_de/0/fpdata/user.db
-    rm /data/vendor/fpc/user.db
     start vendor.move_goodix_data
 
 service vendor.move_goodix_data /vendor/bin/move_goodix_data.sh

@@ -30,7 +30,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_o_mr1.mk)
 $(call inherit-product-if-exists, build/target/product/embedded.mk)
 $(call inherit-product-if-exists, vendor/xiaomi/MiuiCamera/config.mk)
-$(call inherit-product-if-exists, vendor/google/GoogleCamera/config.mk)
 
 # Vendor files
 $(call inherit-product, vendor/xiaomi/sdm660-common/sdm660-common-vendor.mk)
@@ -157,10 +156,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
 
-# Framework RRO
-PRODUCT_ENFORCE_RRO_TARGETS := \
-	framework-res
-
 # Freeform Multiwindow
 PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.software.freeform_window_management.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.freeform_window_management.xml
@@ -204,6 +199,12 @@ PRODUCT_PACKAGES += \
 # HIDL
 PRODUCT_PACKAGES += \
 	android.hidl.base@1.0
+	
+#Hotspot
+PRODUCT_COPY_FILES += \
+    $(PLATFORM_PATH)/configs/hostapd.accept:system/etc/hostapd/hostapd.accept \
+    $(PLATFORM_PATH)/configs/hostapd_default.conf:system/etc/hostapd/hostapd_default.conf \
+    $(PLATFORM_PATH)/configs/hostapd.deny:system/etc/hostapd/hostapd.deny
 
 # IMS
 PRODUCT_PACKAGES += \
@@ -467,14 +468,6 @@ PRODUCT_PACKAGES += \
 # Wi-Fi Display
 PRODUCT_BOOT_JARS += \
 	WfdCommon
-
-# arcore
-PRODUCT_PACKAGES += \
-  arcore
-
-# Lens
-PRODUCT_PACKAGES += \
-    Lens
 
 PRODUCT_PACKAGES += \
 	libnl \

@@ -338,10 +338,6 @@
 	-->
 	<bool name="config_wifiDisplaySupportsProtectedBuffers">true</bool>
 
-	<!-- Flag indicating whether the we should enable the automatic brightness in Settings.
-		 Software implementation will be used if config_hardware_auto_brightness_available is not set -->
-	<bool name="config_automatic_brightness_available">true</bool>
-
 	<!-- Wifi driver supports batched scan -->
 	<bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
 
@@ -534,9 +530,6 @@
 		 rotations as the default behavior. -->
 	<bool name="config_allowAllRotations">true</bool>
 
-	<!-- Enable lockscreen rotation by default -->
-    <bool name="config_enableLockScreenRotation">true</bool>
-
 	<!-- Control the behavior when the user long presses the home button.
 			0 - Nothing
 			1 - Menu key
@@ -577,9 +570,6 @@
 		  so that applications can still use their own mechanisms. -->
 	<bool name="config_enableAutoPowerModes">true</bool>
 
-	<!-- Flag indicating whether round icons should be parsed from the application manifest. -->
-	<bool name="config_useRoundIcon">true</bool>
-
 	 <!-- Whether the device has outdated qti-telephony-common.jar -->
 	<bool name="config_oldQtiTelephony">false</bool>
 
@@ -606,9 +596,6 @@
     <integer name="config_proximityCheckTimeout">100</integer>
     <bool name="config_proximityCheckOnWakeEnabledByDefault">true</bool>
 
-    <!-- Stop listening to the fingerprint reader when NON-WAKEUP proximity sensor is covered & screen is off.
-         config_proximityCheckOnWake must be true. -->
-    <bool name="config_proximityCheckOnFingerprintWake">true</bool>
 
     <!-- Enable system navigation keys. -->
     <bool name="config_supportSystemNavigationKeys">true</bool>
@@ -637,8 +624,6 @@
          before setting power profiles on boot. -->
     <bool name="config_waitForMpctlOnBoot">true</bool>
 
-    <!-- Whether to enable smart clock feature -->
-     <bool name="config_enableSmartClock">true</bool>
     <!-- Full screen aspect ratio -->
     <bool name="config_haveHigherAspectRatioScreen">true</bool>
     <!-- Display mode remapping table.
@@ -659,9 +644,6 @@
     <string name="config_SmartChargingSysfsNode" translatable="false">/sys/class/power_supply/battery/input_suspend</string>
     <string name="config_SmartChargingSupspendValue" translatable="false">1</string>
     <string name="config_SmartChargingResumeValue" translatable="false">0</string>
-
-    <!-- Whether device has oled display -->
-    <bool name="config_hasOledDisplay">true</bool>
 
     <!-- Specify custom blanking delay of the display -->
     <integer name="config_screen_off_delay">0</integer>
