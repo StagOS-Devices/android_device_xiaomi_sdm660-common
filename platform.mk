@@ -463,8 +463,8 @@ PRODUCT_COPY_FILES += \
 	$(PLATFORM_PATH)/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini
 
 # KeyHandler
-PRODUCT_PACKAGES += \
-	org.lineageos.keyhandler
+#PRODUCT_PACKAGES += \
+#	org.lineageos.keyhandler
 
 # Wi-Fi Display
 PRODUCT_BOOT_JARS += \
